@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CSC 456 Fall 2015</string>
+
+    <string name="topics_title">Topics</string>
+    <string name="readings_title">Readings</string>
+
+</resources>
