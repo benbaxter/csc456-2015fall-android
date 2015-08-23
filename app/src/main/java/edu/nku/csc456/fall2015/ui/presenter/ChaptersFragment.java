@@ -1,10 +1,15 @@
 package edu.nku.csc456.fall2015.ui.presenter;
 
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,7 @@ import edu.nku.csc456.fall2015.model.Chapter;
 import edu.nku.csc456.fall2015.service.ApiServiceFactory;
 import edu.nku.csc456.fall2015.ui.adapter.ChapterViewHolder;
 import edu.nku.csc456.fall2015.ui.adapter.ChaptersAdapter;
+import edu.nku.csc456.fall2015.util.DeviceUtil;
 
 /**
  * Created by Benjamin on 8/22/2015.
@@ -52,7 +58,11 @@ public class ChaptersFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        if(DeviceUtil.isLarge(getActivity())) {
+            gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        } else {
+            gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        }
         recyclerView.setLayoutManager(gridLayoutManager);
 
         chapters = new ArrayList<>();
