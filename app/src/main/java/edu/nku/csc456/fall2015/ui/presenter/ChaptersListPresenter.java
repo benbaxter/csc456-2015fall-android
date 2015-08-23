@@ -27,6 +27,8 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ChaptersListPresenter {
 
+    private static final String LOG_TAG = ChaptersListPresenter.class.getSimpleName();
+
     private final DIComponent component;
     @Inject
     protected Csc456ApiService service;
@@ -66,7 +68,7 @@ public class ChaptersListPresenter {
         if( chaptersSubscription != null ) {
             chaptersSubscription.unsubscribe();
         }
-        Log.d("TAG", "refreshing");
+        Log.d(LOG_TAG, "refreshing chapters");
         chaptersSubscription = service.getChapters()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((chapters) -> {

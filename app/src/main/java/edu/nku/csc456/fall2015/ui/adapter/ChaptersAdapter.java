@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,11 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import edu.nku.csc456.fall2015.Csc456Application;
 import edu.nku.csc456.fall2015.R;
 import edu.nku.csc456.fall2015.model.Chapter;
-import edu.nku.csc456.fall2015.service.Csc456ApiService;
+import edu.nku.csc456.fall2015.util.TextViewCompat;
 
 import static edu.nku.csc456.fall2015.service.Csc456ApiService.SLIDE_ENDPOINT_URL;
 import static edu.nku.csc456.fall2015.util.Collections.hasItems;
@@ -25,12 +30,15 @@ import static edu.nku.csc456.fall2015.util.Collections.hasItems;
  */
 public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
 
+    private static final String LOG_TAG = ChaptersAdapter.class.getSimpleName();
     private final Context context;
     private final List<Chapter> chapters;
+    private Tracker tracker;
 
     public ChaptersAdapter(Context context, List<Chapter> chapters) {
         this.context = context;
         this.chapters = chapters;
+        tracker = Csc456Application.getInstance().getDefaultTracker();
     }
 
     @Override
@@ -60,7 +68,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
         } else if (chapter.noClass) {
             background = R.color.primary_light;
         }
-        vh.dateView.setBackgroundColor(context.getColor(background));
+        vh.dateView.setBackgroundColor(ContextCompat.getColor(context, background));
     }
 
     private void bindTopics(ChapterViewHolder vh, List<String> topics) {
@@ -70,10 +78,10 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
             //have only one topic, make it the title
             boolean highlander = topics.size() == 1;
             if (highlander) {
-                vh.topicList.setTextAppearance(android.R.style.TextAppearance_Large);
+                TextViewCompat.setTextAppearance(vh.topicList, context, android.R.style.TextAppearance_Large);
                 vh.topicTitle.setVisibility(View.GONE);
             } else {
-                vh.topicList.setTextAppearance(android.R.style.TextAppearance_DeviceDefault);
+                TextViewCompat.setTextAppearance(vh.topicList, context, android.R.style.TextAppearance_DeviceDefault);
                 vh.topicTitle.setVisibility(View.VISIBLE);
             }
         }
@@ -106,6 +114,12 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
                             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                     downloadManager.enqueue(request);
+                    
+                    Log.i(LOG_TAG, "Sending downloading event for slide: " + slide);
+                    tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Slides Downloading")
+                            .setAction("downloading: " + slide)
+                            .build());
                 });
                 vh.downloadContainer.addView(slideContainer);
             }

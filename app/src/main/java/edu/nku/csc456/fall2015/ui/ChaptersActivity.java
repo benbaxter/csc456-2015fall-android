@@ -16,11 +16,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import edu.nku.csc456.fall2015.Csc456Application;
 import edu.nku.csc456.fall2015.R;
 import edu.nku.csc456.fall2015.model.Chapter;
 import edu.nku.csc456.fall2015.service.Csc456ApiService;
@@ -34,6 +38,8 @@ import retrofit.client.Response;
 
 public class ChaptersActivity extends AppCompatActivity {
 
+    private static final String LOG_TAG = ChaptersActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,5 +50,12 @@ public class ChaptersActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ChaptersFragment.newInstance())
                 .commit();
+
+        Csc456Application application = (Csc456Application) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+
+        Log.i(LOG_TAG, "Sending screen view analytic event for chapters list");
+        tracker.setScreenName("Chapter List");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }
