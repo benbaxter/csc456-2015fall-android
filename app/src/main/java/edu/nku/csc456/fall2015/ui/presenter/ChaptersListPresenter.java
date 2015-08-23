@@ -1,28 +1,21 @@
 package edu.nku.csc456.fall2015.ui.presenter;
 
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Loader;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
-import edu.nku.csc456.fall2015.ChapterRepository;
+import javax.inject.Inject;
+
+import edu.nku.csc456.fall2015.di.DIComponent;
+import edu.nku.csc456.fall2015.di.DIModule;
+import edu.nku.csc456.fall2015.di.DaggerDIComponent;
 import edu.nku.csc456.fall2015.model.Chapter;
+import edu.nku.csc456.fall2015.repository.ChapterRepository;
 import edu.nku.csc456.fall2015.service.Csc456ApiService;
-import edu.nku.csc456.fall2015.ui.ChaptersActivity;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,16 +27,20 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ChaptersListPresenter {
 
-    private final Csc456ApiService service;
-    private final ChapterRepository chapterRepository;
+    private final DIComponent component;
+    @Inject
+    protected Csc456ApiService service;
+    @Inject
+    protected ChapterRepository chapterRepository;
     private ChaptersFragment view;
     private Subscription chaptersSubscription;
 
-    public ChaptersListPresenter(ChaptersFragment view, Csc456ApiService service) {
+    public ChaptersListPresenter(ChaptersFragment view) {
         this.view = view;
-        this.service = service;
-        chapterRepository = new ChapterRepository(view.getActivity());
         chaptersSubscription = new CompositeSubscription();
+
+        component = DaggerDIComponent.builder().dIModule(new DIModule(view.getActivity())).build();
+        component.inject(this);
     }
 
     public void retrieveChapters() {
@@ -73,34 +70,37 @@ public class ChaptersListPresenter {
         chaptersSubscription = service.getChapters()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((chapters) -> {
+                    chapterRepository.save(chapters);
                     handleChaptersAndUpdateView(chapters);
                 });
     }
 
     private void handleChaptersAndUpdateView(List<Chapter> chapters) {
         //push the dates in the past to the end of the list.
-        Date today = new Date();
-        int pivot = getPivot(today, chapters);
+        int pivot = getPivot(new Date(), chapters);
         Collections.rotate(chapters, -pivot);
-        chapterRepository.save(chapters);
         view.updateChapters(chapters);
     }
 
     private int getPivot(Date today, List<Chapter> chapters) {
-        int pivot = 0;
         for( int i = 0; i < chapters.size(); ++i ) {
             Chapter c = chapters.get(i);
-            String[] dates = c.date.split("/");
-            Calendar cCal = Calendar.getInstance();
-            cCal.set(Calendar.MONTH, Integer.parseInt(dates[0]) - 1);
-            cCal.set(Calendar.DATE, Integer.parseInt(dates[1]));
+            Calendar cCal = convertDate(c.date);
 
             Date cDate = cCal.getTime();
             if( today.getTime() - cDate.getTime() < 0 ) {
-                pivot = i;
-                break;
+                return i;
             }
         }
-        return pivot;
+        return 0;
+    }
+
+    private Calendar convertDate(@NonNull String date) {
+        String[] dates = date.split("/");
+        Calendar cCal = Calendar.getInstance();
+        cCal.set(Calendar.MONTH, Integer.parseInt(dates[0]) - 1);
+        cCal.set(Calendar.DATE, Integer.parseInt(dates[1]));
+        cCal.set(Calendar.YEAR, 2015);
+        return cCal;
     }
 }

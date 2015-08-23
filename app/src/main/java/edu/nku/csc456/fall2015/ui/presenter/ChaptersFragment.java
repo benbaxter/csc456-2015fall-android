@@ -59,7 +59,7 @@ public class ChaptersFragment extends Fragment {
         adapter = new ChaptersAdapter(getActivity(), chapters);
         recyclerView.setAdapter(adapter);
 
-        ChaptersListPresenter presenter = new ChaptersListPresenter(this, ApiServiceFactory.getCsc456ApiService());
+        ChaptersListPresenter presenter = new ChaptersListPresenter(this);
         presenter.retrieveChapters();
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
