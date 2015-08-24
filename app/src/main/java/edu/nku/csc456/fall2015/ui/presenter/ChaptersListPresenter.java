@@ -14,8 +14,9 @@ import edu.nku.csc456.fall2015.di.DIComponent;
 import edu.nku.csc456.fall2015.di.DIModule;
 import edu.nku.csc456.fall2015.di.DaggerDIComponent;
 import edu.nku.csc456.fall2015.model.Chapter;
-import edu.nku.csc456.fall2015.repository.ChapterRepository;
+import edu.nku.csc456.fall2015.repository.MutableRepository;
 import edu.nku.csc456.fall2015.service.Csc456ApiService;
+import edu.nku.csc456.fall2015.ui.ListContentFragment;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,7 +26,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by Benjamin on 8/22/2015.
  */
-public class ChaptersListPresenter {
+public class ChaptersListPresenter implements ListPresenter<Chapter> {
 
     private static final String LOG_TAG = ChaptersListPresenter.class.getSimpleName();
 
@@ -33,11 +34,11 @@ public class ChaptersListPresenter {
     @Inject
     protected Csc456ApiService service;
     @Inject
-    protected ChapterRepository chapterRepository;
-    private ChaptersFragment view;
+    protected MutableRepository<Chapter> chapterRepository;
+    private ListContentFragment view;
     private Subscription chaptersSubscription;
 
-    public ChaptersListPresenter(ChaptersFragment view) {
+    public ChaptersListPresenter(ListContentFragment view) {
         this.view = view;
         chaptersSubscription = new CompositeSubscription();
 
@@ -45,7 +46,8 @@ public class ChaptersListPresenter {
         component.inject(this);
     }
 
-    public void retrieveChapters() {
+    @Override
+    public void retrieveData() {
         if( chaptersSubscription != null ) {
             chaptersSubscription.unsubscribe();
         }
@@ -57,14 +59,15 @@ public class ChaptersListPresenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe((chapters) -> {
                 if (chapters.isEmpty()) {
-                    refreshChapters();
+                    refreshData();
                 } else {
                     handleChaptersAndUpdateView(chapters);
                 }
             });
     }
 
-    public void refreshChapters() {
+    @Override
+    public void refreshData() {
         if( chaptersSubscription != null ) {
             chaptersSubscription.unsubscribe();
         }

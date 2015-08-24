@@ -2,6 +2,7 @@ package edu.nku.csc456.fall2015.service;
 
 import java.util.List;
 
+import edu.nku.csc456.fall2015.model.Badge;
 import edu.nku.csc456.fall2015.model.Chapter;
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -19,4 +20,10 @@ public interface Csc456ApiService {
 
     @GET("/chapters-grouped.php")
     Observable<List<Chapter>> getChapters();
+
+    @GET("/badges.php")
+    Observable<List<Badge>> getBadges();
+
+//    @GET("/adventures.php")
+//    Observable<List<Badge>> getAdventures();
 }

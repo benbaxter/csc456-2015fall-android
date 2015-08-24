@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_chapters"
+            android:checked="true"
+            android:icon="@drawable/ic_book_black_18dp"
+            android:title="@string/chapters"/>
+        <item
+            android:id="@+id/nav_adventure"
+            android:checked="false"
+            android:icon="@drawable/ic_public_black_18dp"
+            android:title="@string/adventures"/>
+
+        <item
+            android:id="@+id/nav_main_quest"
+            android:checked="false"
+            android:icon="@drawable/ic_extension_black_18dp"
+            android:title="@string/main_quest"/>
+
+        <item
+            android:id="@+id/nav_badges"
+            android:checked="false"
+            android:icon="@drawable/ic_verified_user_black_18dp"
+            android:title="@string/badges"/>
+
+        <item
+            android:checkable="false"
+            android:id="@+id/navigation_sub"
+            android:title="@string/about">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_website"
+                    android:checked="false"
+                    android:checkable="false"
+                    android:icon="@drawable/ic_laptop_windows_black_18dp"
+                    android:title="@string/website"/>
+
+            </menu>
+
+        </item>
+    </group>
+
+
+</menu>

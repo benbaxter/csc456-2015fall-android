@@ -102,11 +102,10 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
     private void bindSlides(ChapterViewHolder vh, List<String> slides) {
         vh.downloadContainer.removeAllViews();
         if (hasItems(slides)) {
-            for (String slide : slides) {
-                View slideContainer = LayoutInflater.from(context).inflate(R.layout.fab_slide_download, null);
-                FloatingActionButton button = (FloatingActionButton) slideContainer.findViewById(R.id.slide_fab);
-                button.setOnClickListener((v) -> {
-
+            View slideContainer = LayoutInflater.from(context).inflate(R.layout.fab_slide_download, null);
+            FloatingActionButton button = (FloatingActionButton) slideContainer.findViewById(R.id.slide_fab);
+            button.setOnClickListener((v) -> {
+                for (String slide : slides) {
                     Uri ppt = Uri.parse(SLIDE_ENDPOINT_URL + slide);
 
                     DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -114,15 +113,15 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
                             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                     downloadManager.enqueue(request);
-                    
+
                     Log.i(LOG_TAG, "Sending downloading event for slide: " + slide);
                     tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Slides Downloading")
                             .setAction("downloading: " + slide)
                             .build());
-                });
-                vh.downloadContainer.addView(slideContainer);
-            }
+                }
+            });
+            vh.downloadContainer.addView(slideContainer);
             vh.slidesContainer.setVisibility(View.VISIBLE);
         } else {
             vh.slidesContainer.setVisibility(View.GONE);

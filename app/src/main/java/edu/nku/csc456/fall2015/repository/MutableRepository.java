@@ -7,9 +7,9 @@ import edu.nku.csc456.fall2015.model.Chapter;
 /**
  * Created by Benjamin on 8/23/2015.
  */
-public interface ChapterRepository {
+public interface MutableRepository<T> {
 
-    void save(List<Chapter> chapters);
+    void save(List<T> data);
 
-    List<Chapter> findAll();
+    List<T> findAll();
 }

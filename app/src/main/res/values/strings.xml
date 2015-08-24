@@ -4,4 +4,24 @@
     <string name="topics_title">Topics</string>
     <string name="readings_title">Readings</string>
 
+    <string name="chapters">Chapters</string>
+    <string name="adventures">Adventures</string>
+    <string name="badges">Badges</string>
+    <string name="main_quest">Main Quest</string>
+    <string name="website">Website</string>
+    <string name="about">About</string>
+    <string name="website_url">http://nku.benjamingbaxter.com/csc456/2015fall/</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
+
 </resources>

@@ -24,8 +24,8 @@ android {
         applicationId "edu.nku.csc456.fall2015"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.2"
     }
     buildTypes {
         release {

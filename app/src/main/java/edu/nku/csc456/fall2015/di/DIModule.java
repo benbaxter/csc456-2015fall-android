@@ -4,7 +4,10 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.nku.csc456.fall2015.repository.ChapterRepository;
+import edu.nku.csc456.fall2015.model.Badge;
+import edu.nku.csc456.fall2015.model.Chapter;
+import edu.nku.csc456.fall2015.repository.BadgeSharedPrefRepository;
+import edu.nku.csc456.fall2015.repository.MutableRepository;
 import edu.nku.csc456.fall2015.repository.ChapterSharedPrefRepository;
 import edu.nku.csc456.fall2015.service.ApiServiceFactory;
 import edu.nku.csc456.fall2015.service.Csc456ApiService;
@@ -22,8 +25,13 @@ public class DIModule {
     }
 
     @Provides
-    public ChapterRepository chapterRepository(Context context) {
+    public MutableRepository<Chapter> chapterRepository(Context context) {
         return new ChapterSharedPrefRepository(context);
+    }
+
+    @Provides
+    public MutableRepository<Badge> badgeRepository(Context context) {
+        return new BadgeSharedPrefRepository(context);
     }
 
     @Provides
