@@ -5,11 +5,9 @@ import android.content.Context;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 
 import edu.nku.csc456.fall2015.model.Badge;
-import edu.nku.csc456.fall2015.model.Chapter;
 
 /**
  * Created by Benjamin on 8/23/2015.
